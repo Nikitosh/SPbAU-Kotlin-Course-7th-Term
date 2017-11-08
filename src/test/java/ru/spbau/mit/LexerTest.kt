@@ -23,7 +23,7 @@ class LexerTest {
 
     @Test
     fun testExample1() {
-        val lexer = FunLexer(CharStreams.fromFileName(TestUtils.EXAMPLE1_FILE_NAME))
+        val lexer = FunLexer(CharStreams.fromFileName(EXAMPLE1_FILE_NAME))
         val expectedTokens = listOf<String>(
                 "var", "a", "=", "10", "var", "b", "=", "20", "if", "(", "a", ">", "b", ")", "{", "println", "(", "1",
                 ")", "}", "else", "{", "println", "(", "0", ")", "}"
@@ -33,7 +33,7 @@ class LexerTest {
 
     @Test
     fun testExample2() {
-        val lexer = FunLexer(CharStreams.fromFileName(TestUtils.EXAMPLE2_FILE_NAME))
+        val lexer = FunLexer(CharStreams.fromFileName(EXAMPLE2_FILE_NAME))
         val expectedTokens = listOf<String>(
                 "fun", "fib", "(", "n", ")", "{", "if", "(", "n", "<=", "1", ")", "{", "return", "1", "}", "return",
                 "fib", "(", "n", "-", "1", ")", "+", "fib", "(", "n", "-", "2", ")", "}", "var", "i", "=", "1", "while",
@@ -45,7 +45,7 @@ class LexerTest {
 
     @Test
     fun testExample3() {
-        val lexer = FunLexer(CharStreams.fromFileName(TestUtils.EXAMPLE3_FILE_NAME))
+        val lexer = FunLexer(CharStreams.fromFileName(EXAMPLE3_FILE_NAME))
         val expectedTokens = listOf<String>(
                 "fun", "foo", "(", "n", ")", "{", "fun", "bar", "(", "m", ")", "{", "return", "m", "+", "n", "}",
                 "return", "bar", "(", "1", ")", "}", "println", "(", "foo", "(", "41", ")", ")"

@@ -100,9 +100,14 @@ arguments
     ;
 
 identifier
+    : Identifier
+    ;
+
+Identifier
     : (Letter | UNDERSCORE) (Letter | Digit | UNDERSCORE)*
     ;
 
+fragment
 Letter
     : 'a'..'z'
     | 'A'..'Z'
@@ -117,11 +122,13 @@ Number
     | '0'
     ;
 
+fragment
 Digit
     : '0'
     | NonZeroDigit
     ;
 
+fragment
 NonZeroDigit
     : '1'..'9'
     ;

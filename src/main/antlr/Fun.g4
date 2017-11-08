@@ -99,6 +99,30 @@ arguments
     : (expression (COMMA expression)*)?
     ;
 
+FUN
+    : 'fun'
+    ;
+
+VAR
+    : 'var'
+    ;
+
+WHILE
+    : 'while'
+    ;
+
+IF
+    : 'if'
+    ;
+
+ELSE
+    : 'else'
+    ;
+
+RETURN
+    : 'return'
+    ;
+
 identifier
     : Identifier
     ;
@@ -139,30 +163,6 @@ LeadingZerosNumber
 
 InvalidIdentifier
     : [0-9]([0-9a-zA-Z])+
-    ;
-
-FUN
-    : 'fun'
-    ;
-
-VAR
-    : 'var'
-    ;
-
-WHILE
-    : 'while'
-    ;
-
-IF
-    : 'if'
-    ;
-
-ELSE
-    : 'else'
-    ;
-
-RETURN
-    : 'return'
     ;
 
 COMMA

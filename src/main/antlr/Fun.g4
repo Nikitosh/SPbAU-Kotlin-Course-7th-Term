@@ -133,6 +133,14 @@ NonZeroDigit
     : '1'..'9'
     ;
 
+LeadingZerosNumber
+    : MINUS? '0' [0-9]+
+    ;
+
+InvalidIdentifier
+    : [0-9]([0-9a-zA-Z])+
+    ;
+
 FUN
     : 'fun'
     ;
@@ -244,3 +252,8 @@ LINE_COMMENT
 WS
     : [ \t\r\n]+ -> skip
     ;
+
+UnknownToken
+    : .
+    ;
+

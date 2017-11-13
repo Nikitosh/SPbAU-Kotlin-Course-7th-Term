@@ -156,8 +156,8 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     }
 
     override fun visitUnaryExpression(context: FunParser.UnaryExpressionContext): Any {
-        try {
-            return when {
+        return try {
+            when {
                 context.functionCall() != null -> context.functionCall().eval()
                 context.identifier() != null ->
                     getCurrentScope().getVariableValue(context.identifier().eval() as String)
@@ -171,25 +171,25 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     }
 
     override fun visitFunctionCall(context: FunParser.FunctionCallContext): Any {
-        try {
+        return try {
             val function = getCurrentScope().getFunction(context.identifier().text)
-            return function(context.arguments().expression().map { it.eval().cast<Int>(context) })
+            function(context.arguments().expression().map { it.eval().cast<Int>(context) })
         } catch (exception: ScopeException) {
             throw getException(exception.error, context)
         }
     }
 
     override fun visitIdentifier(context: FunParser.IdentifierContext): Any {
-        when {
-            context.Identifier() != null -> return context.Identifier().text
+        return when {
+            context.Identifier() != null -> context.Identifier().text
             context.InvalidIdentifier() != null -> throw getException("Invalid identifier found", context)
             else -> throw getException("Unknown operation type found", context)
         }
     }
 
     override fun visitLiteral(context: FunParser.LiteralContext): Any {
-        when {
-            context.Number() != null -> return context.Number().text.toInt()
+        return when {
+            context.Number() != null -> context.Number().text.toInt()
             context.LeadingZerosNumber() != null -> throw getException("Number with leading zeros found", context)
             else -> throw getException("Unknown operation type found", context)
         }

@@ -2,7 +2,6 @@ package ru.spbau.mit.interpreter
 
 import org.antlr.v4.runtime.BufferedTokenStream
 import org.antlr.v4.runtime.CharStreams
-import ru.spbau.mit.interpreter.EvalVisitor
 import ru.spbau.mit.parser.FunLexer
 import ru.spbau.mit.parser.FunParser
 import java.io.OutputStreamWriter

@@ -25,7 +25,7 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
 
     override fun visitBlock(context: FunParser.BlockContext): Any {
         context.statement().forEach {
-            val value = it.eval()
+            val value = it.eval(getCurrentScope())
             if (value != Unit &&
                     (it.ifStatement() != null || it.returnStatement() != null || it.whileStatement() != null)) {
                 return value
@@ -46,7 +46,7 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
                 throw getException("Illegal number of arguments for function $functionName", context)
             }
             val scope = Scope(getCurrentScope())
-            for (i in 0..arguments.size) {
+            for (i in 0 until arguments.size) {
                 scope.defineVariable(parameterNames[i])
                 scope.setVariableValue(parameterNames[i], arguments[i])
             }

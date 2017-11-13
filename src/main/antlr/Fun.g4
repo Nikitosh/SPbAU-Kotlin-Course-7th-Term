@@ -125,6 +125,7 @@ RETURN
 
 identifier
     : Identifier
+    | InvalidIdentifier
     ;
 
 Identifier
@@ -139,6 +140,7 @@ Letter
 
 literal
     : Number
+    | LeadingZerosNumber
     ;
 
 Number

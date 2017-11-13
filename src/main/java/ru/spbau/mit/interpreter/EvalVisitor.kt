@@ -41,7 +41,7 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     override fun visitFunctionDeclaration(context: FunParser.FunctionDeclarationContext) {
         val functionName = context.identifier().text
         getCurrentScope().defineFunction(functionName) { arguments ->
-            val parameterNames = context.parameterNames().identifier().map { it.text }
+            val parameterNames = context.parameterNames().identifier().map { it.eval() as String }
             if (arguments.size != parameterNames.size) {
                 throw getException("Illegal number of arguments for function $functionName", context)
             }
@@ -57,7 +57,7 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
 
     override fun visitVariableDeclaration(context: FunParser.VariableDeclarationContext) {
         try {
-            val variableName = context.identifier().text
+            val variableName = context.identifier().eval() as String
             getCurrentScope().defineVariable(variableName)
             context.expression()?.let {
                 getCurrentScope().setVariableValue(variableName, it.eval().cast<Int>(context))
@@ -92,7 +92,7 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     override fun visitAssignment(context: FunParser.AssignmentContext) {
         try {
             val value = context.expression().eval().cast<Int>(context)
-            getCurrentScope().setVariableValue(context.identifier().text, value)
+            getCurrentScope().setVariableValue(context.identifier().eval() as String, value)
         } catch (exception: ScopeException) {
             throw getException(exception.error, context)
         }
@@ -159,8 +159,9 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
         try {
             return when {
                 context.functionCall() != null -> context.functionCall().eval()
-                context.identifier() != null -> getCurrentScope().getVariableValue(context.identifier().text)
-                context.literal() != null -> context.literal().text.toInt()
+                context.identifier() != null ->
+                    getCurrentScope().getVariableValue(context.identifier().eval() as String)
+                context.literal() != null -> context.literal().eval()
                 context.expression() != null -> context.expression().eval()
                 else -> throw getException("Unknown operation type found", context)
             }
@@ -175,6 +176,22 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
             return function(context.arguments().expression().map { it.eval().cast<Int>(context) })
         } catch (exception: ScopeException) {
             throw getException(exception.error, context)
+        }
+    }
+
+    override fun visitIdentifier(context: FunParser.IdentifierContext): Any {
+        when {
+            context.Identifier() != null -> return context.Identifier().text
+            context.InvalidIdentifier() != null -> throw getException("Invalid identifier found", context)
+            else -> throw getException("Unknown operation type found", context)
+        }
+    }
+
+    override fun visitLiteral(context: FunParser.LiteralContext): Any {
+        when {
+            context.Number() != null -> return context.Number().text.toInt()
+            context.LeadingZerosNumber() != null -> throw getException("Number with leading zeros found", context)
+            else -> throw getException("Unknown operation type found", context)
         }
     }
 

@@ -8,27 +8,27 @@ class Scope(private val parentScope: Scope? = null) {
 
     fun defineVariable(variableName: String) {
         if (variableName in variables) {
-            throw ScopeException("Variable $variableName is already defined in this scope.")
+            throw ScopeException("Variable $variableName is already defined in this scope")
         }
         variables[variableName] = 0
     }
 
     fun getVariableValue(variableName: String): Int = variables[variableName]
             ?: parentScope?.getVariableValue(variableName)
-            ?: throw ScopeException("Variable $variableName is not defined.")
+            ?: throw ScopeException("Variable $variableName is not defined")
 
     fun setVariableValue(variableName: String, value: Int) {
         if (variableName in variables) {
             variables[variableName] = value
         } else {
             parentScope?.setVariableValue(variableName, value)
-                    ?: throw ScopeException("Variable $variableName is not defined.")
+                    ?: throw ScopeException("Variable $variableName is not defined")
         }
     }
 
     fun defineFunction(functionName: String, function: (List<Int>) -> Int) {
         if (functionName in functions) {
-            throw ScopeException("Function $functionName is already defined in this scope.")
+            throw ScopeException("Function $functionName is already defined in this scope")
         }
         functions[functionName] = function
     }

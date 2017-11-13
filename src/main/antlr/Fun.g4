@@ -55,33 +55,33 @@ expression
     ;
 
 orExpression
-    : andExpression
-    | orExpression OR andExpression
+    : andExpression                 # unaryOrExpression
+    | orExpression OR andExpression # binaryOrExpression
     ;
 
 andExpression
-    : equalityExpression
-    | andExpression AND equalityExpression
+    : equalityExpression                   # unaryAndExpression
+    | andExpression AND equalityExpression # binaryAndExpression
     ;
 
 equalityExpression
-    : relationalExpression
-    | equalityExpression op = (EQ | NEQ) relationalExpression
+    : relationalExpression                                    # unaryEqualityExpression
+    | equalityExpression op = (EQ | NEQ) relationalExpression # binaryEqualityExpression
     ;
 
 relationalExpression
-    : additiveExpression
-    | relationalExpression op = (GT | LT | GE | LE) additiveExpression
+    : additiveExpression                                               # unaryRelationalExpression
+    | relationalExpression op = (GT | LT | GE | LE) additiveExpression # binaryRelationalExpression
     ;
 
 additiveExpression
-    : multiplicativeExpression
-    | additiveExpression op = (PLUS | MINUS) multiplicativeExpression
+    : multiplicativeExpression                                        # unaryAdditiveExpression
+    | additiveExpression op = (PLUS | MINUS) multiplicativeExpression # binaryAdditiveExpression
     ;
 
 multiplicativeExpression
-    : unaryExpression
-    | multiplicativeExpression op = (MUL | DIV | MOD) unaryExpression
+    : unaryExpression                                                 # unaryMultiplicativeExpression
+    | multiplicativeExpression op = (MUL | DIV | MOD) unaryExpression # binaryMultiplicativeExpression
     ;
 
 unaryExpression

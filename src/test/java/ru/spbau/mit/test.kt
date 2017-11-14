@@ -18,8 +18,8 @@ class TestGraph {
 
     @Test
     fun testSolve() {
-        assertEquals(listOf(0, 0, 0, 0), createSampleGraph1().solve())
-        assertEquals(listOf(0, 0, 0, 1, 1, 2), createSampleGraph2().solve())
+        assertEquals(listOf(0, 0, 0, 0), solve(createSampleGraph1()))
+        assertEquals(listOf(0, 0, 0, 1, 1, 2), solve(createSampleGraph2()))
     }
 
     private fun createSampleGraph1(): Graph {

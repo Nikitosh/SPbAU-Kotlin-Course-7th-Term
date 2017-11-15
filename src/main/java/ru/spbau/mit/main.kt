@@ -42,7 +42,7 @@ class Graph(val vertices: List<Vertex>) {
                 if (neighbour in visitedVertices && neighbour != previousVertex) {
                     return path.drop(path.indexOf(neighbour)).toSet()
                 }
-                if (!visitedVertices.contains(neighbour)) {
+                if (neighbour !in visitedVertices) {
                     findCycle(neighbour, vertex)?.let { return it }
                 }
             }

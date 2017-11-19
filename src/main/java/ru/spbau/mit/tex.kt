@@ -13,9 +13,9 @@ class TextElement(private val text: String) : Element {
 }
 
 @DslMarker
-annotation class TexTagMarker
+annotation class TexCommandMarker
 
-@TexTagMarker
+@TexCommandMarker
 abstract class Command(
         val name: String,
         private val arguments: List<String> = listOf(),

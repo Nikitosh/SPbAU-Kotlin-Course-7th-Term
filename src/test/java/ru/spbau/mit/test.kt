@@ -183,18 +183,18 @@ class TestSource {
     }
 
     @Test
-    fun testCustomTag() {
+    fun testCustomCommand() {
         assertEquals("""
             |\documentclass{article}
             |\begin{document}
-            |\begin{customtag}{arg1=value1}{arg2=value2}[option=value3]
+            |\begin{customCommand}{arg1=value1}{arg2=value2}[option=value3]
             |text
-            |\end{customtag}
+            |\end{customCommand}
             |\end{document}
             |""".trimMargin(),
                 document {
                     documentClass("article")
-                    customCommand("customtag", listOf("arg1=value1", "arg2=value2"), "option=value3") {
+                    customCommand("customCommand", listOf("arg1=value1", "arg2=value2"), "option=value3") {
                         +"text"
                     }
                 }.toString()

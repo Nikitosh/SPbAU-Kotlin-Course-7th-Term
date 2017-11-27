@@ -1,6 +1,10 @@
 package ru.spbau.mit
 
+import org.apache.commons.io.FileUtils
+import java.io.File
 import java.io.OutputStream
+import java.nio.file.Files
+import java.util.concurrent.TimeUnit
 
 interface Element {
     fun render(builder: StringBuilder)
@@ -23,7 +27,7 @@ abstract class Command(
 ) : Element {
     private val children = arrayListOf<Element>()
 
-    protected fun <T : Element> initCommand(command: T, init: T.() -> Unit): T {
+    protected fun <T : Element> initCommand(command: T, init: T.() -> Unit = {}): T {
         command.init()
         children.add(command)
         return command
@@ -56,7 +60,7 @@ abstract class Command(
     }
 }
 
-abstract class InlineCommand(
+abstract class CommandWithoutContent(
         name: String,
         arguments: List<String> = listOf(),
         options: List<String> = listOf()
@@ -114,12 +118,12 @@ class CustomCommandWithContent(
         options: List<String> = listOf()
 ): CommandWithContent(name, arguments, options)
 
-class Item: InlineCommand("item")
+class Item: CommandWithoutContent("item")
 
-class FrameTitle(frameTitle: String): InlineCommand("frametitle", listOf(frameTitle))
+class FrameTitle(frameTitle: String): CommandWithoutContent("frametitle", listOf(frameTitle))
 
 class Frame(options: List<String>): CommandWithContent("frame", listOf(), options) {
-    fun frameTitle(frameTitle: String) = initCommand(FrameTitle(frameTitle), {})
+    fun frameTitle(frameTitle: String) = initCommand(FrameTitle(frameTitle))
 }
 
 class Itemize(options: List<String>): CommandWithItems("itemize", listOf(), options)
@@ -137,12 +141,12 @@ class Right: CommandWithContent("flushright")
 class DocumentClass(
         className: String,
         options: List<String>
-): InlineCommand("documentclass", listOf(className), options)
+): CommandWithoutContent("documentclass", listOf(className), options)
 
 class UsePackage(
         packageName: String,
         options: List<String>
-): InlineCommand("usepackage", listOf(packageName), options)
+): CommandWithoutContent("usepackage", listOf(packageName), options)
 
 class Document: CommandWithContent("document") {
     private var documentClass: DocumentClass? = null
@@ -150,7 +154,7 @@ class Document: CommandWithContent("document") {
     private val packages: MutableList<UsePackage> = mutableListOf()
 
     override fun render(builder: StringBuilder) {
-        documentClass?.render(builder) ?: throw TexBuilderException("No document class found")
+        documentClass!!.render(builder)
         packages.forEach { it.render(builder) }
         super.render(builder)
     }
@@ -165,6 +169,23 @@ class Document: CommandWithContent("document") {
     fun usepackage(packageName: String, vararg options: String) {
         packages.add(UsePackage(packageName, listOf(*options)))
     }
+
+    fun hasDocumentClass() = documentClass != null
+
+    fun toPdf(filename: String) {
+        val latexFilename = "$filename.tex"
+        val latexFile = File(latexFilename);
+        FileUtils.writeStringToFile(latexFile, toString())
+        ProcessBuilder("pdflatex", latexFilename)
+                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start()
+                .waitFor(60, TimeUnit.SECONDS)
+        for (extension in listOf("aux", "log", "nav", "out", "snm", "toc", "tex")) {
+            Files.deleteIfExists(File("$filename.$extension").toPath())
+        }
+    }
 }
 
 fun document(init: Document.() -> Unit): Document = Document().apply(init)
+        .let { return if (it.hasDocumentClass()) it else throw TexBuilderException("No document class found") }

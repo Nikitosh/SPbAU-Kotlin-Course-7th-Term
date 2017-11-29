@@ -4,7 +4,7 @@ import ru.spbau.mit.exceptions.ScopeException
 
 class Scope(private val parentScope: Scope? = null) {
     private val variables: MutableMap<String, Int> = mutableMapOf()
-    private val functions: MutableMap<String, (List<Int>) -> Int> = mutableMapOf()
+    private val functions: MutableMap<String, Function> = mutableMapOf()
 
     fun defineVariable(variableName: String) {
         if (variableName in variables) {
@@ -26,14 +26,14 @@ class Scope(private val parentScope: Scope? = null) {
         }
     }
 
-    fun defineFunction(functionName: String, function: (List<Int>) -> Int) {
+    fun defineFunction(functionName: String, function: Function) {
         if (functionName in functions) {
             throw ScopeException("Function $functionName is already defined in this scope")
         }
         functions[functionName] = function
     }
 
-    fun getFunction(functionName: String): (List<Int>) -> Int = functions[functionName]
+    fun getFunction(functionName: String): Function = functions[functionName]
             ?: parentScope?.getFunction(functionName)
             ?: throw ScopeException("Function $functionName is not defined")
 }

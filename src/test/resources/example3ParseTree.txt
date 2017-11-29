@@ -30,18 +30,18 @@ File
                       ReturnStatement
                         [return]
                         Expression
-                          OrExpression
-                            AndExpression
-                              EqualityExpression
-                                RelationalExpression
-                                  AdditiveExpression
-                                    AdditiveExpression
-                                      MultiplicativeExpression
+                          UnaryOrExpression
+                            UnaryAndExpression
+                              UnaryEqualityExpression
+                                UnaryRelationalExpression
+                                  BinaryAdditiveExpression
+                                    UnaryAdditiveExpression
+                                      UnaryMultiplicativeExpression
                                         UnaryExpression
                                           Identifier
                                             [m]
                                     [+]
-                                    MultiplicativeExpression
+                                    UnaryMultiplicativeExpression
                                       UnaryExpression
                                         Identifier
                                           [n]
@@ -50,12 +50,12 @@ File
               ReturnStatement
                 [return]
                 Expression
-                  OrExpression
-                    AndExpression
-                      EqualityExpression
-                        RelationalExpression
-                          AdditiveExpression
-                            MultiplicativeExpression
+                  UnaryOrExpression
+                    UnaryAndExpression
+                      UnaryEqualityExpression
+                        UnaryRelationalExpression
+                          UnaryAdditiveExpression
+                            UnaryMultiplicativeExpression
                               UnaryExpression
                                 FunctionCall
                                   Identifier
@@ -63,12 +63,12 @@ File
                                   [(]
                                   Arguments
                                     Expression
-                                      OrExpression
-                                        AndExpression
-                                          EqualityExpression
-                                            RelationalExpression
-                                              AdditiveExpression
-                                                MultiplicativeExpression
+                                      UnaryOrExpression
+                                        UnaryAndExpression
+                                          UnaryEqualityExpression
+                                            UnaryRelationalExpression
+                                              UnaryAdditiveExpression
+                                                UnaryMultiplicativeExpression
                                                   UnaryExpression
                                                     Literal
                                                       [1]
@@ -76,12 +76,12 @@ File
           [}]
     Statement
       Expression
-        OrExpression
-          AndExpression
-            EqualityExpression
-              RelationalExpression
-                AdditiveExpression
-                  MultiplicativeExpression
+        UnaryOrExpression
+          UnaryAndExpression
+            UnaryEqualityExpression
+              UnaryRelationalExpression
+                UnaryAdditiveExpression
+                  UnaryMultiplicativeExpression
                     UnaryExpression
                       FunctionCall
                         Identifier
@@ -89,12 +89,12 @@ File
                         [(]
                         Arguments
                           Expression
-                            OrExpression
-                              AndExpression
-                                EqualityExpression
-                                  RelationalExpression
-                                    AdditiveExpression
-                                      MultiplicativeExpression
+                            UnaryOrExpression
+                              UnaryAndExpression
+                                UnaryEqualityExpression
+                                  UnaryRelationalExpression
+                                    UnaryAdditiveExpression
+                                      UnaryMultiplicativeExpression
                                         UnaryExpression
                                           FunctionCall
                                             Identifier
@@ -102,12 +102,12 @@ File
                                             [(]
                                             Arguments
                                               Expression
-                                                OrExpression
-                                                  AndExpression
-                                                    EqualityExpression
-                                                      RelationalExpression
-                                                        AdditiveExpression
-                                                          MultiplicativeExpression
+                                                UnaryOrExpression
+                                                  UnaryAndExpression
+                                                    UnaryEqualityExpression
+                                                      UnaryRelationalExpression
+                                                        UnaryAdditiveExpression
+                                                          UnaryMultiplicativeExpression
                                                             UnaryExpression
                                                               Literal
                                                                 [41]

@@ -18,19 +18,19 @@ File
                 [if]
                 [(]
                 Expression
-                  OrExpression
-                    AndExpression
-                      EqualityExpression
-                        RelationalExpression
-                          RelationalExpression
-                            AdditiveExpression
-                              MultiplicativeExpression
+                  UnaryOrExpression
+                    UnaryAndExpression
+                      UnaryEqualityExpression
+                        BinaryRelationalExpression
+                          UnaryRelationalExpression
+                            UnaryAdditiveExpression
+                              UnaryMultiplicativeExpression
                                 UnaryExpression
                                   Identifier
                                     [n]
                           [<=]
-                          AdditiveExpression
-                            MultiplicativeExpression
+                          UnaryAdditiveExpression
+                            UnaryMultiplicativeExpression
                               UnaryExpression
                                 Literal
                                   [1]
@@ -42,12 +42,12 @@ File
                       ReturnStatement
                         [return]
                         Expression
-                          OrExpression
-                            AndExpression
-                              EqualityExpression
-                                RelationalExpression
-                                  AdditiveExpression
-                                    MultiplicativeExpression
+                          UnaryOrExpression
+                            UnaryAndExpression
+                              UnaryEqualityExpression
+                                UnaryRelationalExpression
+                                  UnaryAdditiveExpression
+                                    UnaryMultiplicativeExpression
                                       UnaryExpression
                                         Literal
                                           [1]
@@ -56,13 +56,13 @@ File
               ReturnStatement
                 [return]
                 Expression
-                  OrExpression
-                    AndExpression
-                      EqualityExpression
-                        RelationalExpression
-                          AdditiveExpression
-                            AdditiveExpression
-                              MultiplicativeExpression
+                  UnaryOrExpression
+                    UnaryAndExpression
+                      UnaryEqualityExpression
+                        UnaryRelationalExpression
+                          BinaryAdditiveExpression
+                            UnaryAdditiveExpression
+                              UnaryMultiplicativeExpression
                                 UnaryExpression
                                   FunctionCall
                                     Identifier
@@ -70,24 +70,24 @@ File
                                     [(]
                                     Arguments
                                       Expression
-                                        OrExpression
-                                          AndExpression
-                                            EqualityExpression
-                                              RelationalExpression
-                                                AdditiveExpression
-                                                  AdditiveExpression
-                                                    MultiplicativeExpression
+                                        UnaryOrExpression
+                                          UnaryAndExpression
+                                            UnaryEqualityExpression
+                                              UnaryRelationalExpression
+                                                BinaryAdditiveExpression
+                                                  UnaryAdditiveExpression
+                                                    UnaryMultiplicativeExpression
                                                       UnaryExpression
                                                         Identifier
                                                           [n]
                                                   [-]
-                                                  MultiplicativeExpression
+                                                  UnaryMultiplicativeExpression
                                                     UnaryExpression
                                                       Literal
                                                         [1]
                                     [)]
                             [+]
-                            MultiplicativeExpression
+                            UnaryMultiplicativeExpression
                               UnaryExpression
                                 FunctionCall
                                   Identifier
@@ -95,18 +95,18 @@ File
                                   [(]
                                   Arguments
                                     Expression
-                                      OrExpression
-                                        AndExpression
-                                          EqualityExpression
-                                            RelationalExpression
-                                              AdditiveExpression
-                                                AdditiveExpression
-                                                  MultiplicativeExpression
+                                      UnaryOrExpression
+                                        UnaryAndExpression
+                                          UnaryEqualityExpression
+                                            UnaryRelationalExpression
+                                              BinaryAdditiveExpression
+                                                UnaryAdditiveExpression
+                                                  UnaryMultiplicativeExpression
                                                     UnaryExpression
                                                       Identifier
                                                         [n]
                                                 [-]
-                                                MultiplicativeExpression
+                                                UnaryMultiplicativeExpression
                                                   UnaryExpression
                                                     Literal
                                                       [2]
@@ -119,12 +119,12 @@ File
           [i]
         [=]
         Expression
-          OrExpression
-            AndExpression
-              EqualityExpression
-                RelationalExpression
-                  AdditiveExpression
-                    MultiplicativeExpression
+          UnaryOrExpression
+            UnaryAndExpression
+              UnaryEqualityExpression
+                UnaryRelationalExpression
+                  UnaryAdditiveExpression
+                    UnaryMultiplicativeExpression
                       UnaryExpression
                         Literal
                           [1]
@@ -133,19 +133,19 @@ File
         [while]
         [(]
         Expression
-          OrExpression
-            AndExpression
-              EqualityExpression
-                RelationalExpression
-                  RelationalExpression
-                    AdditiveExpression
-                      MultiplicativeExpression
+          UnaryOrExpression
+            UnaryAndExpression
+              UnaryEqualityExpression
+                BinaryRelationalExpression
+                  UnaryRelationalExpression
+                    UnaryAdditiveExpression
+                      UnaryMultiplicativeExpression
                         UnaryExpression
                           Identifier
                             [i]
                   [<=]
-                  AdditiveExpression
-                    MultiplicativeExpression
+                  UnaryAdditiveExpression
+                    UnaryMultiplicativeExpression
                       UnaryExpression
                         Literal
                           [5]
@@ -155,12 +155,12 @@ File
           Block
             Statement
               Expression
-                OrExpression
-                  AndExpression
-                    EqualityExpression
-                      RelationalExpression
-                        AdditiveExpression
-                          MultiplicativeExpression
+                UnaryOrExpression
+                  UnaryAndExpression
+                    UnaryEqualityExpression
+                      UnaryRelationalExpression
+                        UnaryAdditiveExpression
+                          UnaryMultiplicativeExpression
                             UnaryExpression
                               FunctionCall
                                 Identifier
@@ -168,23 +168,23 @@ File
                                 [(]
                                 Arguments
                                   Expression
-                                    OrExpression
-                                      AndExpression
-                                        EqualityExpression
-                                          RelationalExpression
-                                            AdditiveExpression
-                                              MultiplicativeExpression
+                                    UnaryOrExpression
+                                      UnaryAndExpression
+                                        UnaryEqualityExpression
+                                          UnaryRelationalExpression
+                                            UnaryAdditiveExpression
+                                              UnaryMultiplicativeExpression
                                                 UnaryExpression
                                                   Identifier
                                                     [i]
                                   [,]
                                   Expression
-                                    OrExpression
-                                      AndExpression
-                                        EqualityExpression
-                                          RelationalExpression
-                                            AdditiveExpression
-                                              MultiplicativeExpression
+                                    UnaryOrExpression
+                                      UnaryAndExpression
+                                        UnaryEqualityExpression
+                                          UnaryRelationalExpression
+                                            UnaryAdditiveExpression
+                                              UnaryMultiplicativeExpression
                                                 UnaryExpression
                                                   FunctionCall
                                                     Identifier
@@ -192,12 +192,12 @@ File
                                                     [(]
                                                     Arguments
                                                       Expression
-                                                        OrExpression
-                                                          AndExpression
-                                                            EqualityExpression
-                                                              RelationalExpression
-                                                                AdditiveExpression
-                                                                  MultiplicativeExpression
+                                                        UnaryOrExpression
+                                                          UnaryAndExpression
+                                                            UnaryEqualityExpression
+                                                              UnaryRelationalExpression
+                                                                UnaryAdditiveExpression
+                                                                  UnaryMultiplicativeExpression
                                                                     UnaryExpression
                                                                       Identifier
                                                                         [i]
@@ -209,18 +209,18 @@ File
                   [i]
                 [=]
                 Expression
-                  OrExpression
-                    AndExpression
-                      EqualityExpression
-                        RelationalExpression
-                          AdditiveExpression
-                            AdditiveExpression
-                              MultiplicativeExpression
+                  UnaryOrExpression
+                    UnaryAndExpression
+                      UnaryEqualityExpression
+                        UnaryRelationalExpression
+                          BinaryAdditiveExpression
+                            UnaryAdditiveExpression
+                              UnaryMultiplicativeExpression
                                 UnaryExpression
                                   Identifier
                                     [i]
                             [+]
-                            MultiplicativeExpression
+                            UnaryMultiplicativeExpression
                               UnaryExpression
                                 Literal
                                   [1]

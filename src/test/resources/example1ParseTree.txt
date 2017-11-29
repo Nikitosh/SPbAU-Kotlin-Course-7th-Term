@@ -7,12 +7,12 @@ File
           [a]
         [=]
         Expression
-          OrExpression
-            AndExpression
-              EqualityExpression
-                RelationalExpression
-                  AdditiveExpression
-                    MultiplicativeExpression
+          UnaryOrExpression
+            UnaryAndExpression
+              UnaryEqualityExpression
+                UnaryRelationalExpression
+                  UnaryAdditiveExpression
+                    UnaryMultiplicativeExpression
                       UnaryExpression
                         Literal
                           [10]
@@ -23,12 +23,12 @@ File
           [b]
         [=]
         Expression
-          OrExpression
-            AndExpression
-              EqualityExpression
-                RelationalExpression
-                  AdditiveExpression
-                    MultiplicativeExpression
+          UnaryOrExpression
+            UnaryAndExpression
+              UnaryEqualityExpression
+                UnaryRelationalExpression
+                  UnaryAdditiveExpression
+                    UnaryMultiplicativeExpression
                       UnaryExpression
                         Literal
                           [20]
@@ -37,19 +37,19 @@ File
         [if]
         [(]
         Expression
-          OrExpression
-            AndExpression
-              EqualityExpression
-                RelationalExpression
-                  RelationalExpression
-                    AdditiveExpression
-                      MultiplicativeExpression
+          UnaryOrExpression
+            UnaryAndExpression
+              UnaryEqualityExpression
+                BinaryRelationalExpression
+                  UnaryRelationalExpression
+                    UnaryAdditiveExpression
+                      UnaryMultiplicativeExpression
                         UnaryExpression
                           Identifier
                             [a]
                   [>]
-                  AdditiveExpression
-                    MultiplicativeExpression
+                  UnaryAdditiveExpression
+                    UnaryMultiplicativeExpression
                       UnaryExpression
                         Identifier
                           [b]
@@ -59,12 +59,12 @@ File
           Block
             Statement
               Expression
-                OrExpression
-                  AndExpression
-                    EqualityExpression
-                      RelationalExpression
-                        AdditiveExpression
-                          MultiplicativeExpression
+                UnaryOrExpression
+                  UnaryAndExpression
+                    UnaryEqualityExpression
+                      UnaryRelationalExpression
+                        UnaryAdditiveExpression
+                          UnaryMultiplicativeExpression
                             UnaryExpression
                               FunctionCall
                                 Identifier
@@ -72,12 +72,12 @@ File
                                 [(]
                                 Arguments
                                   Expression
-                                    OrExpression
-                                      AndExpression
-                                        EqualityExpression
-                                          RelationalExpression
-                                            AdditiveExpression
-                                              MultiplicativeExpression
+                                    UnaryOrExpression
+                                      UnaryAndExpression
+                                        UnaryEqualityExpression
+                                          UnaryRelationalExpression
+                                            UnaryAdditiveExpression
+                                              UnaryMultiplicativeExpression
                                                 UnaryExpression
                                                   Literal
                                                     [1]
@@ -89,12 +89,12 @@ File
           Block
             Statement
               Expression
-                OrExpression
-                  AndExpression
-                    EqualityExpression
-                      RelationalExpression
-                        AdditiveExpression
-                          MultiplicativeExpression
+                UnaryOrExpression
+                  UnaryAndExpression
+                    UnaryEqualityExpression
+                      UnaryRelationalExpression
+                        UnaryAdditiveExpression
+                          UnaryMultiplicativeExpression
                             UnaryExpression
                               FunctionCall
                                 Identifier
@@ -102,12 +102,12 @@ File
                                 [(]
                                 Arguments
                                   Expression
-                                    OrExpression
-                                      AndExpression
-                                        EqualityExpression
-                                          RelationalExpression
-                                            AdditiveExpression
-                                              MultiplicativeExpression
+                                    UnaryOrExpression
+                                      UnaryAndExpression
+                                        UnaryEqualityExpression
+                                          UnaryRelationalExpression
+                                            UnaryAdditiveExpression
+                                              UnaryMultiplicativeExpression
                                                 UnaryExpression
                                                   Literal
                                                     [0]

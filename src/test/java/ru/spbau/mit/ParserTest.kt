@@ -17,20 +17,20 @@ class ParserTest {
   Block
     Statement
       Expression
-        OrExpression
-          AndExpression
-            EqualityExpression
-              RelationalExpression
-                RelationalExpression
-                  AdditiveExpression
-                    AdditiveExpression
-                      MultiplicativeExpression
+        UnaryOrExpression
+          UnaryAndExpression
+            UnaryEqualityExpression
+              BinaryRelationalExpression
+                UnaryRelationalExpression
+                  BinaryAdditiveExpression
+                    UnaryAdditiveExpression
+                      UnaryMultiplicativeExpression
                         UnaryExpression
                           Literal
                             [1]
                     [+]
-                    MultiplicativeExpression
-                      MultiplicativeExpression
+                    BinaryMultiplicativeExpression
+                      UnaryMultiplicativeExpression
                         UnaryExpression
                           Literal
                             [2]
@@ -39,8 +39,8 @@ class ParserTest {
                         Literal
                           [3]
                 [>]
-                AdditiveExpression
-                  MultiplicativeExpression
+                UnaryAdditiveExpression
+                  UnaryMultiplicativeExpression
                     UnaryExpression
                       Literal
                         [5]

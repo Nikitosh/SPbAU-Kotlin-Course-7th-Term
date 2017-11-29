@@ -12,20 +12,22 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     private val scopes : MutableList<Scope> = mutableListOf(Scope())
 
     init {
-        getCurrentScope().defineFunction("println") { arguments ->
-            writer.write(arguments.joinToString(separator = " ", postfix = "\n"))
-            writer.flush()
-            0
-        }
+        getCurrentScope().defineFunction("println", object: Function {
+            override fun apply(visitor: EvalVisitor, arguments: List<Int>): Int {
+                writer.write(arguments.joinToString(separator = " ", postfix = "\n"))
+                writer.flush()
+                return 0
+            }
+        })
     }
 
     override fun visitFile(context: FunParser.FileContext): Any {
-        return context.block().eval()
+        return visit(context.block())
     }
 
     override fun visitBlock(context: FunParser.BlockContext): Any {
         context.statement().forEach {
-            val value = it.eval(getCurrentScope())
+            val value = visit(it)
             if (value != Unit &&
                     (it.ifStatement() != null || it.returnStatement() != null || it.whileStatement() != null)) {
                 return value
@@ -35,32 +37,25 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     }
 
     override fun visitBlockWithBraces(context: FunParser.BlockWithBracesContext): Any {
-        return context.block().eval()
+        addScope(Scope(getCurrentScope()))
+        val value = visit(context.block())
+        removeScope()
+        return value
     }
 
     override fun visitFunctionDeclaration(context: FunParser.FunctionDeclarationContext) {
         val functionName = context.identifier().text
-        getCurrentScope().defineFunction(functionName) { arguments ->
-            val parameterNames = context.parameterNames().identifier().map { it.eval() as String }
-            if (arguments.size != parameterNames.size) {
-                throw getException("Illegal number of arguments for function $functionName", context)
-            }
-            val scope = Scope(getCurrentScope())
-            for (i in 0 until arguments.size) {
-                scope.defineVariable(parameterNames[i])
-                scope.setVariableValue(parameterNames[i], arguments[i])
-            }
-            val value = context.blockWithBraces().eval(scope)
-            if (value is Unit) 0 else value.cast<Int>(context)
-        }
+        val parameterNames = context.parameterNames().identifier().map { visit(it) as String }
+        val body = context.blockWithBraces()
+        getCurrentScope().defineFunction(functionName, FunFunction(parameterNames, body))
     }
 
     override fun visitVariableDeclaration(context: FunParser.VariableDeclarationContext) {
         try {
-            val variableName = context.identifier().eval() as String
+            val variableName = visit(context.identifier()) as String
             getCurrentScope().defineVariable(variableName)
             context.expression()?.let {
-                getCurrentScope().setVariableValue(variableName, it.eval().cast<Int>(context))
+                getCurrentScope().setVariableValue(variableName, visit(it) as Int)
             }
         } catch (exception: ScopeException) {
             throw getException(exception.error, context)
@@ -68,9 +63,9 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     }
 
     override fun visitWhileStatement(context: FunParser.WhileStatementContext): Any {
-        fun condition() = context.expression().eval().cast<Boolean>(context)
+        fun condition() = visit(context.expression()) as Boolean
         while (condition()) {
-            val value = context.blockWithBraces().eval()
+            val value = visit(context.blockWithBraces())
             if (value !is Unit) {
                 return value
             }
@@ -79,42 +74,41 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     }
 
     override fun visitIfStatement(context: FunParser.IfStatementContext): Any {
-        val condition = context.expression().eval().cast<Boolean>(context)
+        val condition = visit(context.expression()) as Boolean
         if (condition) {
-            return context.blockWithBraces(0).eval()
+            return visit(context.blockWithBraces(0))
         }
         if (context.blockWithBraces().size >= 2) {
-            return context.blockWithBraces(1).eval()
+            return visit(context.blockWithBraces(1))
         }
         return Unit
     }
 
     override fun visitAssignment(context: FunParser.AssignmentContext) {
         try {
-            val value = context.expression().eval().cast<Int>(context)
-            getCurrentScope().setVariableValue(context.identifier().eval() as String, value)
+            val variableName = visit(context.identifier()) as String
+            val value = visit(context.expression()) as Int
+            getCurrentScope().setVariableValue(variableName, value)
         } catch (exception: ScopeException) {
             throw getException(exception.error, context)
         }
     }
 
     override fun visitReturnStatement(context: FunParser.ReturnStatementContext): Any {
-        return context.expression().eval()
+        return visit(context.expression())
     }
 
     override fun visitBinaryOrExpression(context: FunParser.BinaryOrExpressionContext): Any {
-        return context.orExpression().eval().cast<Boolean>(context)
-                || context.andExpression().eval().cast<Boolean>(context)
+        return visit(context.orExpression()) as Boolean || visit(context.andExpression()) as Boolean
     }
 
     override fun visitBinaryAndExpression(context: FunParser.BinaryAndExpressionContext): Any {
-        return context.andExpression().eval().cast<Boolean>(context)
-                && context.equalityExpression().eval().cast<Boolean>(context)
+        return visit(context.andExpression()) as Boolean && visit(context.equalityExpression()) as Boolean
     }
 
     override fun visitBinaryEqualityExpression(context: FunParser.BinaryEqualityExpressionContext): Any {
-        val leftValue = context.equalityExpression().eval().cast<Int>(context)
-        val rightValue = context.relationalExpression().eval().cast<Int>(context)
+        val leftValue = visit(context.equalityExpression()) as Int
+        val rightValue = visit(context.relationalExpression()) as Int
         return when (context.op.type) {
             FunParser.EQ -> leftValue == rightValue
             FunParser.NEQ -> leftValue != rightValue
@@ -123,8 +117,8 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     }
 
     override fun visitBinaryRelationalExpression(context: FunParser.BinaryRelationalExpressionContext): Any {
-        val leftValue = context.relationalExpression().eval().cast<Int>(context)
-        val rightValue = context.additiveExpression().eval().cast<Int>(context)
+        val leftValue = visit(context.relationalExpression()) as Int
+        val rightValue = visit(context.additiveExpression()) as Int
         return when (context.op.type) {
             FunParser.GT -> leftValue > rightValue
             FunParser.LT -> leftValue < rightValue
@@ -135,8 +129,8 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     }
 
     override fun visitBinaryAdditiveExpression(context: FunParser.BinaryAdditiveExpressionContext): Any {
-        val leftValue = context.additiveExpression().eval().cast<Int>(context)
-        val rightValue = context.multiplicativeExpression().eval().cast<Int>(context)
+        val leftValue = visit(context.additiveExpression()) as Int
+        val rightValue = visit(context.multiplicativeExpression()) as Int
         return when (context.op.type) {
             FunParser.PLUS -> leftValue + rightValue
             FunParser.MINUS -> leftValue - rightValue
@@ -145,8 +139,8 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     }
 
     override fun visitBinaryMultiplicativeExpression(context: FunParser.BinaryMultiplicativeExpressionContext): Any {
-        val leftValue = context.multiplicativeExpression().eval().cast<Int>(context)
-        val rightValue = context.unaryExpression().eval().cast<Int>(context)
+        val leftValue = visit(context.multiplicativeExpression()) as Int
+        val rightValue = visit(context.unaryExpression()) as Int
         return when (context.op.type) {
             FunParser.MUL -> leftValue * rightValue
             FunParser.DIV -> leftValue / rightValue
@@ -158,11 +152,11 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
     override fun visitUnaryExpression(context: FunParser.UnaryExpressionContext): Any {
         return try {
             when {
-                context.functionCall() != null -> context.functionCall().eval()
+                context.functionCall() != null -> visit(context.functionCall())
                 context.identifier() != null ->
-                    getCurrentScope().getVariableValue(context.identifier().eval() as String)
-                context.literal() != null -> context.literal().eval()
-                context.expression() != null -> context.expression().eval()
+                    getCurrentScope().getVariableValue(visit(context.identifier()) as String)
+                context.literal() != null -> visit(context.literal())
+                context.expression() != null -> visit(context.expression())
                 else -> throw getException("Unknown operation type found", context)
             }
         } catch (exception: ScopeException) {
@@ -172,8 +166,10 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
 
     override fun visitFunctionCall(context: FunParser.FunctionCallContext): Any {
         return try {
-            val function = getCurrentScope().getFunction(context.identifier().text)
-            function(context.arguments().expression().map { it.eval().cast<Int>(context) })
+            val functionName = context.identifier().text
+            val function = getCurrentScope().getFunction(functionName)
+            val arguments = context.arguments().expression().map { visit(it) as Int }
+            function.apply(this, arguments)
         } catch (exception: ScopeException) {
             throw getException(exception.error, context)
         }
@@ -195,19 +191,16 @@ class EvalVisitor(private val writer: Writer): FunBaseVisitor<Any>() {
         }
     }
 
-    private inline fun <reified T> Any.cast(context: ParserRuleContext): T {
-        return this as? T ?: throw getException("Can't evaluate expression value as desired class", context)
-    }
+    fun getCurrentScope() = scopes.last()
 
-    private fun ParserRuleContext.eval(scope: Scope = Scope(scopes.last())): Any {
+    fun addScope(scope: Scope) {
         scopes.add(scope)
-        val value = accept(this@EvalVisitor)
-        scopes.removeAt(scopes.size - 1)
-        return value
     }
 
-    private fun getCurrentScope() = scopes.last()
+    fun removeScope() {
+        scopes.removeAt(scopes.size - 1)
+    }
 
-    private fun getException(error: String, context: ParserRuleContext) =
+    fun getException(error: String, context: ParserRuleContext) =
             InterpretationException(context.getStart().line, error)
 }

@@ -51,18 +51,21 @@ class ParserTest {
     @Test
     fun testExample1() {
         val parser = FunParser(BufferedTokenStream(FunLexer(CharStreams.fromFileName(EXAMPLE1_FILE_NAME))))
-        assertEquals(File(EXAMPLE1_PARSE_TREE_FILE_NAME).readText(), toParseTree(parser.file()))
+        assertEquals(File(EXAMPLE1_PARSE_TREE_FILE_NAME).readText().replace("\r\n", "\n"),
+                toParseTree(parser.file()))
     }
 
     @Test
     fun testExample2() {
         val parser = FunParser(BufferedTokenStream(FunLexer(CharStreams.fromFileName(EXAMPLE2_FILE_NAME))))
-        assertEquals(File(EXAMPLE2_PARSE_TREE_FILE_NAME).readText(), toParseTree(parser.file()))
+        assertEquals(File(EXAMPLE2_PARSE_TREE_FILE_NAME).readText().replace("\r\n", "\n"),
+                toParseTree(parser.file()))
     }
 
     @Test
     fun testExample3() {
         val parser = FunParser(BufferedTokenStream(FunLexer(CharStreams.fromFileName(EXAMPLE3_FILE_NAME))))
-        assertEquals(File(EXAMPLE3_PARSE_TREE_FILE_NAME).readText(), toParseTree(parser.file()))
+        assertEquals(File(EXAMPLE3_PARSE_TREE_FILE_NAME).readText().replace("\r\n", "\n"),
+                toParseTree(parser.file()))
     }
 }

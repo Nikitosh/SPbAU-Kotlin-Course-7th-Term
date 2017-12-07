@@ -49,11 +49,7 @@ abstract class Command(
         children.add(TextElement(this))
     }
 
-    override fun toString(): String {
-        val builder = StringBuilder()
-        render(builder)
-        return builder.toString()
-    }
+    override fun toString(): String = buildString(this::render)
 
     fun toOutputStream(outputStream: OutputStream) {
         outputStream.write(toString().toByteArray())
@@ -81,8 +77,6 @@ abstract class CommandWithContent(
         renderChildren(builder)
         builder.append("\\end{$name}\n")
     }
-
-    fun frame(vararg options: String, init: Frame.() -> Unit) = initCommand(Frame(listOf(*options)), init)
 
     fun itemize(vararg options: String, init: Itemize.() -> Unit) = initCommand(Itemize(listOf(*options)), init)
 
@@ -169,6 +163,8 @@ class Document: CommandWithContent("document") {
     fun usepackage(packageName: String, vararg options: String) {
         packages.add(UsePackage(packageName, listOf(*options)))
     }
+
+    fun frame(vararg options: String, init: Frame.() -> Unit) = initCommand(Frame(listOf(*options)), init)
 
     fun hasDocumentClass() = documentClass != null
 

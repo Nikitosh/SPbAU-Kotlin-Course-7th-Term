@@ -6,110 +6,59 @@ File
         Identifier
           [a]
         [=]
-        Expression
-          UnaryOrExpression
-            UnaryAndExpression
-              UnaryEqualityExpression
-                UnaryRelationalExpression
-                  UnaryAdditiveExpression
-                    UnaryMultiplicativeExpression
-                      UnaryExpression
-                        Literal
-                          [10]
+        LiteralExpression
+          Literal
+            [10]
     Statement
       VariableDeclaration
         [var]
         Identifier
           [b]
         [=]
-        Expression
-          UnaryOrExpression
-            UnaryAndExpression
-              UnaryEqualityExpression
-                UnaryRelationalExpression
-                  UnaryAdditiveExpression
-                    UnaryMultiplicativeExpression
-                      UnaryExpression
-                        Literal
-                          [20]
+        LiteralExpression
+          Literal
+            [20]
     Statement
       IfStatement
         [if]
         [(]
-        Expression
-          UnaryOrExpression
-            UnaryAndExpression
-              UnaryEqualityExpression
-                BinaryRelationalExpression
-                  UnaryRelationalExpression
-                    UnaryAdditiveExpression
-                      UnaryMultiplicativeExpression
-                        UnaryExpression
-                          Identifier
-                            [a]
-                  [>]
-                  UnaryAdditiveExpression
-                    UnaryMultiplicativeExpression
-                      UnaryExpression
-                        Identifier
-                          [b]
+        BinaryExpression
+          IdentifierExpression
+            Identifier
+              [a]
+          [>]
+          IdentifierExpression
+            Identifier
+              [b]
         [)]
         BlockWithBraces
           [{]
           Block
             Statement
-              Expression
-                UnaryOrExpression
-                  UnaryAndExpression
-                    UnaryEqualityExpression
-                      UnaryRelationalExpression
-                        UnaryAdditiveExpression
-                          UnaryMultiplicativeExpression
-                            UnaryExpression
-                              FunctionCall
-                                Identifier
-                                  [println]
-                                [(]
-                                Arguments
-                                  Expression
-                                    UnaryOrExpression
-                                      UnaryAndExpression
-                                        UnaryEqualityExpression
-                                          UnaryRelationalExpression
-                                            UnaryAdditiveExpression
-                                              UnaryMultiplicativeExpression
-                                                UnaryExpression
-                                                  Literal
-                                                    [1]
-                                [)]
+              FunctionCallExpression
+                FunctionCall
+                  Identifier
+                    [println]
+                  [(]
+                  Arguments
+                    LiteralExpression
+                      Literal
+                        [1]
+                  [)]
           [}]
         [else]
         BlockWithBraces
           [{]
           Block
             Statement
-              Expression
-                UnaryOrExpression
-                  UnaryAndExpression
-                    UnaryEqualityExpression
-                      UnaryRelationalExpression
-                        UnaryAdditiveExpression
-                          UnaryMultiplicativeExpression
-                            UnaryExpression
-                              FunctionCall
-                                Identifier
-                                  [println]
-                                [(]
-                                Arguments
-                                  Expression
-                                    UnaryOrExpression
-                                      UnaryAndExpression
-                                        UnaryEqualityExpression
-                                          UnaryRelationalExpression
-                                            UnaryAdditiveExpression
-                                              UnaryMultiplicativeExpression
-                                                UnaryExpression
-                                                  Literal
-                                                    [0]
-                                [)]
+              FunctionCallExpression
+                FunctionCall
+                  Identifier
+                    [println]
+                  [(]
+                  Arguments
+                    LiteralExpression
+                      Literal
+                        [0]
+                  [)]
           [}]

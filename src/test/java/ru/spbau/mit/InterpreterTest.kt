@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
 import org.junit.Test
 import ru.spbau.mit.exceptions.InterpretationException
+import ru.spbau.mit.exceptions.ScopeException
 import ru.spbau.mit.interpreter.EvalVisitor
 import ru.spbau.mit.parser.FunLexer
 import ru.spbau.mit.parser.FunParser
@@ -17,7 +18,7 @@ class InterpreterTest {
         assertEquals("46\n", evaluate(CharStreams.fromString("var b=5\nprintln(1+5*10-b)")))
     }
 
-    @Test(expected = InterpretationException::class)
+    @Test(expected = ScopeException::class)
     fun testException1() {
         evaluate(CharStreams.fromString("var b=5\nprintln(a)"))
     }
@@ -25,16 +26,6 @@ class InterpreterTest {
     @Test(expected = InterpretationException::class)
     fun testException2() {
         evaluate(CharStreams.fromString("fun foo(n) {\nprintln(n)\n}\nfoo(5, 10)\n"))
-    }
-
-    @Test(expected = InterpretationException::class)
-    fun testException3() {
-        evaluate(CharStreams.fromString("var a = 001"))
-    }
-
-    @Test(expected = InterpretationException::class)
-    fun testException4() {
-        evaluate(CharStreams.fromString("var 2a = 5"))
     }
 
     @Test

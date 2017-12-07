@@ -3,21 +3,33 @@ package ru.spbau.mit
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.Token
 import org.junit.Test
+import ru.spbau.mit.exceptions.InterpretationException
 import ru.spbau.mit.parser.FunLexer
 import kotlin.test.assertEquals
 
 class LexerTest {
+
+    @Test(expected = InterpretationException::class)
+    fun testLeadingZerosNumber() {
+        FunLexer(CharStreams.fromString("var a = 001")).allTokens
+    }
+
+    @Test(expected = InterpretationException::class)
+    fun testInvalidIdentifier() {
+        FunLexer(CharStreams.fromString("var 2a = 5")).allTokens
+    }
+
     @Test
     fun testIdentifiers() {
-        val lexer = FunLexer(CharStreams.fromString("aba_1_aba ___a _    z 10a"))
-        val expectedTokens = listOf("aba_1_aba", "___a", "_", "z", "10a")
+        val lexer = FunLexer(CharStreams.fromString("aba_1_aba ___a _    z  "))
+        val expectedTokens = listOf("aba_1_aba", "___a", "_", "z")
         assertEquals(expectedTokens, lexer.allTokens.map(Token::getText))
     }
 
     @Test
     fun testNumbers() {
-        val lexer = FunLexer(CharStreams.fromString("0 -250 199 00001"))
-        val expectedTokens = listOf("0", "-250", "199", "00001")
+        val lexer = FunLexer(CharStreams.fromString("0 -250 199 11"))
+        val expectedTokens = listOf("0", "-250", "199", "11")
         assertEquals(expectedTokens, lexer.allTokens.map(Token::getText))
     }
 

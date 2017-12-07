@@ -1,4 +1,9 @@
 grammar Fun;
+import LexerRules;
+
+@parser::header {
+    import ru.spbau.mit.exceptions.InterpretationException;
+}
 
 file
     : block
@@ -51,44 +56,16 @@ returnStatement
     ;
 
 expression
-    : orExpression
-    ;
-
-orExpression
-    : andExpression                 # unaryOrExpression
-    | orExpression OR andExpression # binaryOrExpression
-    ;
-
-andExpression
-    : equalityExpression                   # unaryAndExpression
-    | andExpression AND equalityExpression # binaryAndExpression
-    ;
-
-equalityExpression
-    : relationalExpression                                    # unaryEqualityExpression
-    | equalityExpression op = (EQ | NEQ) relationalExpression # binaryEqualityExpression
-    ;
-
-relationalExpression
-    : additiveExpression                                               # unaryRelationalExpression
-    | relationalExpression op = (GT | LT | GE | LE) additiveExpression # binaryRelationalExpression
-    ;
-
-additiveExpression
-    : multiplicativeExpression                                        # unaryAdditiveExpression
-    | additiveExpression op = (PLUS | MINUS) multiplicativeExpression # binaryAdditiveExpression
-    ;
-
-multiplicativeExpression
-    : unaryExpression                                                 # unaryMultiplicativeExpression
-    | multiplicativeExpression op = (MUL | DIV | MOD) unaryExpression # binaryMultiplicativeExpression
-    ;
-
-unaryExpression
-    : functionCall
-    | identifier
-    | literal
-    | LEFT_PARENTHESIS expression RIGHT_PARENTHESIS
+    : functionCall                                   # functionCallExpression
+    | identifier                                     # identifierExpression
+    | literal                                        # literalExpression
+    | LEFT_PARENTHESIS expression RIGHT_PARENTHESIS  # parenthesisExpression
+    | expression op = (MUL | DIV | MOD) expression   # binaryExpression
+    | expression op = (PLUS | MINUS) expression      # binaryExpression
+    | expression op = (GT | LT | GE | LE) expression # binaryExpression
+    | expression op = (EQ | NEQ) expression          # binaryExpression
+    | expression op = AND expression                 # logicalExpression
+    | expression op = OR expression                  # logicalExpression
     ;
 
 functionCall
@@ -99,163 +76,10 @@ arguments
     : (expression (COMMA expression)*)?
     ;
 
-FUN
-    : 'fun'
-    ;
-
-VAR
-    : 'var'
-    ;
-
-WHILE
-    : 'while'
-    ;
-
-IF
-    : 'if'
-    ;
-
-ELSE
-    : 'else'
-    ;
-
-RETURN
-    : 'return'
-    ;
-
 identifier
     : Identifier
-    | InvalidIdentifier
-    ;
-
-Identifier
-    : (Letter | UNDERSCORE) (Letter | Digit | UNDERSCORE)*
-    ;
-
-fragment
-Letter
-    : 'a'..'z'
-    | 'A'..'Z'
     ;
 
 literal
     : Number
-    | LeadingZerosNumber
     ;
-
-Number
-    : MINUS? NonZeroDigit (Digit)*
-    | '0'
-    ;
-
-fragment
-Digit
-    : '0'
-    | NonZeroDigit
-    ;
-
-fragment
-NonZeroDigit
-    : '1'..'9'
-    ;
-
-LeadingZerosNumber
-    : MINUS? '0' [0-9]+
-    ;
-
-InvalidIdentifier
-    : [0-9]([0-9a-zA-Z])+
-    ;
-
-COMMA
-    : ','
-    ;
-
-ASSIGN
-    : '='
-    ;
-
-LEFT_BRACE
-    : '{'
-    ;
-
-RIGHT_BRACE
-    : '}'
-    ;
-
-LEFT_PARENTHESIS
-    : '('
-    ;
-
-RIGHT_PARENTHESIS
-    : ')'
-    ;
-
-UNDERSCORE
-    : '_'
-    ;
-
-MUL
-    : '*'
-    ;
-
-DIV
-    : '/'
-    ;
-
-MOD
-    : '%'
-    ;
-
-PLUS
-    : '+'
-    ;
-
-MINUS
-    : '-'
-    ;
-
-GT
-    : '>'
-    ;
-
-LT
-    : '<'
-    ;
-
-GE
-    : '>='
-    ;
-
-LE
-    : '<='
-    ;
-
-EQ
-    : '=='
-    ;
-
-NEQ
-    : '!='
-    ;
-
-AND
-    : '&&'
-    ;
-
-OR
-    : '||'
-    ;
-
-LINE_COMMENT
-    : '//' ~[\r\n]* -> skip
-    ;
-
-WS
-    : [ \t\r\n]+ -> skip
-    ;
-
-UnknownToken
-    : .
-    ;
-

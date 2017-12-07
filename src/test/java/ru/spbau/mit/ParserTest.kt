@@ -16,34 +16,24 @@ class ParserTest {
 """File
   Block
     Statement
-      Expression
-        UnaryOrExpression
-          UnaryAndExpression
-            UnaryEqualityExpression
-              BinaryRelationalExpression
-                UnaryRelationalExpression
-                  BinaryAdditiveExpression
-                    UnaryAdditiveExpression
-                      UnaryMultiplicativeExpression
-                        UnaryExpression
-                          Literal
-                            [1]
-                    [+]
-                    BinaryMultiplicativeExpression
-                      UnaryMultiplicativeExpression
-                        UnaryExpression
-                          Literal
-                            [2]
-                      [*]
-                      UnaryExpression
-                        Literal
-                          [3]
-                [>]
-                UnaryAdditiveExpression
-                  UnaryMultiplicativeExpression
-                    UnaryExpression
-                      Literal
-                        [5]
+      BinaryExpression
+        BinaryExpression
+          LiteralExpression
+            Literal
+              [1]
+          [+]
+          BinaryExpression
+            LiteralExpression
+              Literal
+                [2]
+            [*]
+            LiteralExpression
+              Literal
+                [3]
+        [>]
+        LiteralExpression
+          Literal
+            [5]
 """
         assertEquals(expectedParseTree, toParseTree(parser.file()))
     }

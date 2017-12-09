@@ -24,7 +24,7 @@ class TestSource {
         }.toString()
     }
 
-    @Test(expected = TexBuilderException::class)
+    @Test(expected = IllegalArgumentException::class)
     fun testMoreThanOneDocumentClass() {
         document {
             documentClass("article")

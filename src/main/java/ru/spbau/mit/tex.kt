@@ -67,7 +67,7 @@ abstract class CommandWithoutContent(
     }
 }
 
-abstract class CommandWithContent(
+abstract class BlockCommand(
         name: String,
         arguments: List<String> = listOf(),
         options: List<String> = listOf()
@@ -77,18 +77,24 @@ abstract class CommandWithContent(
         renderChildren(builder)
         builder.append("\\end{$name}\n")
     }
+}
 
+open class CommandWithContent(
+        name: String,
+        arguments: List<String> = listOf(),
+        options: List<String> = listOf()
+): BlockCommand(name, arguments, options) {
     fun itemize(vararg options: String, init: Itemize.() -> Unit) = initCommand(Itemize(listOf(*options)), init)
 
     fun enumerate(vararg options: String, init: Enumerate.() -> Unit) = initCommand(Enumerate(listOf(*options)), init)
 
     fun math(vararg options: String, init: Math.() -> Unit) = initCommand(Math(listOf(*options)), init)
 
-    fun left(init: Left.() -> Unit) = initCommand(Left(), init)
+    fun left(init: CommandWithContent.() -> Unit) = initCommand(CommandWithContent("flushleft"), init)
 
-    fun center(init: Center.() -> Unit) = initCommand(Center(), init)
+    fun center(init: CommandWithContent.() -> Unit) = initCommand(CommandWithContent("center"), init)
 
-    fun right(init: Right.() -> Unit) = initCommand(Right(), init)
+    fun right(init: CommandWithContent.() -> Unit) = initCommand(CommandWithContent("flushright"), init)
 
     fun customCommand(
             name: String,
@@ -102,7 +108,7 @@ abstract class CommandWithItems(
         name: String,
         arguments: List<String> = listOf(),
         options: List<String> = listOf()
-): CommandWithContent(name, arguments, options) {
+): BlockCommand(name, arguments, options) {
     fun item(init: Item.() -> Unit) = initCommand(Item(), init)
 }
 
@@ -126,12 +132,6 @@ class Enumerate(options: List<String>): CommandWithItems("enumerate", listOf(), 
 
 class Math(options: List<String>): CommandWithContent("displaymath", listOf(), options)
 
-class Left: CommandWithContent("flushleft")
-
-class Center: CommandWithContent("center")
-
-class Right: CommandWithContent("flushright")
-
 class DocumentClass(
         className: String,
         options: List<String>
@@ -154,9 +154,7 @@ class Document: CommandWithContent("document") {
     }
 
     fun documentClass(className: String, vararg options: String) {
-        if (documentClass != null) {
-            throw TexBuilderException("Two or more document classes found")
-        }
+        require(documentClass == null)
         documentClass = DocumentClass(className, listOf(*options))
     }
 
@@ -170,7 +168,7 @@ class Document: CommandWithContent("document") {
 
     fun toPdf(filename: String) {
         val latexFilename = "$filename.tex"
-        val latexFile = File(latexFilename);
+        val latexFile = File(latexFilename)
         FileUtils.writeStringToFile(latexFile, toString())
         ProcessBuilder("pdflatex", latexFilename)
                 .redirectOutput(ProcessBuilder.Redirect.INHERIT)
